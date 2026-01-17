@@ -1,0 +1,28 @@
+#root {
+  text-align: center;
+}
+
+h3 {
+  color: rgb(121, 25, 25);
+  font-weight: bold;
+}
+.button-clear {
+  background-color: white;
+  border-color: red;
+  border: 2px solid red;
+  width: 120px;
+  padding: 10px 30px;
+  border-color: rgb(113, 17, 17);
+  border-radius: 60px;
+  cursor: pointer;
+}
+
+.button-colored {
+  background-color: rgb(223, 26, 26);
+  width: 120px;
+  padding: 10px 30px;
+  border-color: rgb(113, 17, 17);
+  border-radius: 60px;
+  cursor: pointer;
+  color: white;
+}
