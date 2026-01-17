@@ -31,6 +31,7 @@ type ModalChooseParentChildProps = {
   hierarchy: Level[];
   level: number;
   onSubmit: (parent: { id: number | null; name: string }) => void;
+  name: string;
 };
 export default function ModalChooseParentChild({
   open,
@@ -38,8 +39,12 @@ export default function ModalChooseParentChild({
   hierarchy,
   level,
   onSubmit,
+  name,
 }: ModalChooseParentChildProps) {
-  const [selectedParent, setSelectedParent] = useState<{ id: number | null; name: string } | null>(null);
+  const [selectedParent, setSelectedParent] = useState<{
+    id: number | null;
+    name: string;
+  } | null>(null);
 
   const isSelected = (id: number | null) => selectedParent?.id === id;
 
@@ -47,7 +52,7 @@ export default function ModalChooseParentChild({
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Typography variant="h6" sx={{ color: "error.dark", fontWeight: 600 }}>
-          Select Parent for this
+          Select Parent for: {name}
         </Typography>
 
         <Typography variant="body2" sx={{ mt: 2 }}>

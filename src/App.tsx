@@ -10,6 +10,7 @@ import ModalChooseParentChild from "./ModalChooseParentChild";
 import { ToastContainer, toast } from "react-toastify";
 import HierarchyArrows from "./HierarchyArrows";
 import type { DragEndEvent } from "@dnd-kit/core";
+import { useEffect } from "react";
 
 type Position = {
   id: number;
@@ -43,11 +44,17 @@ function App() {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
 
+  const [pendingDropName, setPendingDropName] = useState("");
+
   const [selectedLevel, setSelectedLevel] = useState(0);
   const [pendingDrop, setPendingDrop] = useState<{
     position: Position;
     levelId: number;
   } | null>(null);
+
+  useEffect(() => {
+    console.log(hierarchy);
+  }, []);
 
   const addHierarchyLevel = () => {
     setHierarchy((prev) => [
@@ -62,7 +69,7 @@ function App() {
 
   const deletePosition = (id: number) => {
     const ok = window.confirm(
-      "Delete this position and all of its child nodes?"
+      "Delete this position and all of its child nodes?",
     );
 
     if (!ok) return;
@@ -74,7 +81,7 @@ function App() {
 
   const findIdsToDelete = (
     startId: number,
-    parentToChildren: Map<number, number[]>
+    parentToChildren: Map<number, number[]>,
   ) => {
     const toDelete = new Set<number>();
 
@@ -117,17 +124,17 @@ function App() {
       prev.map((lvl) => ({
         ...lvl,
         currentPositions: lvl.currentPositions.filter(
-          (p) => !idsToDelete.has(p.id)
+          (p) => !idsToDelete.has(p.id),
         ),
-      }))
+      })),
     );
 
     setParentChild((prev) =>
       prev.filter(
         (rel) =>
           !idsToDelete.has(rel.childId) &&
-          (rel.parentId == null || !idsToDelete.has(rel.parentId))
-      )
+          (rel.parentId == null || !idsToDelete.has(rel.parentId)),
+      ),
     );
   };
 
@@ -172,7 +179,7 @@ function App() {
     setHierarchy((prev) =>
       prev.map((lvl) => {
         const cleaned = lvl.currentPositions.filter(
-          (p) => p.id !== position.id
+          (p) => p.id !== position.id,
         );
 
         if (lvl.id === levelId) {
@@ -180,7 +187,7 @@ function App() {
         }
 
         return { ...lvl, currentPositions: cleaned };
-      })
+      }),
     );
 
     setPendingDrop(null);
@@ -191,6 +198,10 @@ function App() {
     if (!over || !over.id.toString().startsWith("level-")) return;
 
     const droppedPosition = active.data.current?.position;
+    const droppedPositionName = active.data.current?.position.name;
+
+    setPendingDropName(droppedPositionName)
+
     const levelId = Number(over.id.toString().replace("level-", ""));
 
     if (!droppedPosition) return;
@@ -269,6 +280,7 @@ function App() {
             hierarchy={hierarchy}
             level={selectedLevel}
             onSubmit={addParentChild}
+            name={pendingDropName}
           />
         </div>
       </DndContext>
